@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+</head>
+<style type="text/css">
+	body {
+		font: 14px "Microsoft yahei", Arial, Helvetica, sans-serif;
+	    margin:0px;
+	    padding:0px;
+	    overflow-x: hidden;
+	}
+	.lf{float:left;}
+	.rt{float:right;}
+	.clear{clear:both;}
+	.box{
+		overflow: hidden;
+		width: 100%;
+		background: url(../statics/img/ad_bg.png) no-repeat;
+		background-size: 100% 100%;
+		/*border:1px solid red;*/
+	}
+	.search{
+		width: 100%;
+		/*border:1px solid #008000;*/
+	}
+	.rank{
+		width: 100%;
+		/*border:1px solid red;*/
+	}
+	.card{
+		width: 100%;
+		/*border:1px solid #008000;*/
+	}
+	.rank-box{
+		position: relative;
+		/*margin-left: 4.5%;*/
+		width:100%;
+		font-size: 0.13rem;
+		/*border:1px solid green;*/
+		/*height:0.8rem;*/
+		/*overflow: hidden;*/
+		background: url(../statics/img/img_xian@1x.png) no-repeat;
+		background-position: 10px 15px;
+	}
+	.rank-my{
+		/*border:1px solid red;*/
+		width: 94%;
+		margin-left: 3%;
+		/*height: 30px;*/
+	}
+	.num1{
+		position: absolute;
+		width: 30%;
+		left:3%;
+		top:10px;
+		/*border:1px solid red;*/
+		text-align: center;
+		color: #fff;
+	}
+	.num2{
+		position: absolute;
+		width: 30%;
+		left: 34.5%;
+		top:10px;
+		/*border:1px solid red;*/
+		text-align: center;
+		color: #fff;
+	}
+	.num3{
+		position: absolute;
+		width: 30%;
+		left:66%;
+		top:10px;
+		/*border:1px solid red;*/
+		text-align: center;
+		color: #fff;
+	}
+	.font{
+		padding: 0px 0.15rem;
+	}
+	.rank-my{
+		width: 92%;
+		margin-left: 4%;
+		/*border:1px solid red;*/
+	}
+	.rank-mynum{
+		width: 70%;
+		height: 100%;
+		font-size: 0.14rem;
+		/*border:1px solid red;*/
+	}
+	.address{
+		width: 100%;
+		/*position: relative;*/
+
+	}
+	.info{
+		padding-left: 15px;
+		margin-top: 0.15rem;
+		position: relative;
+		padding-right: 10px;
+		color: #FFFFFF;
+	}
+	.sport{
+		position: absolute;
+		height: 8px;
+		width: 8px;
+		border-radius: 50%;
+		background-color: #FFFFFF;
+		left: 0px;
+		top:6px;
+	}
+	.paiming{
+		line-height: 22px;
+		padding-left: 8px;
+		margin-top: 0.13rem;
+		color: #FFFFFF;
+		text-align: center;
+		width: 52px;
+		height: 22px;
+		background: url(../statics/img/img_pm.png) no-repeat;
+	}
+	.rank-yest{
+		font-size: 0.14rem;
+		margin-top: 0.15rem;
+		width: 30%;
+		text-align: center;
+		color: #FFFFFF;
+	}
+</style>
+<body>
+<div class="box">
+	<div class="search"></div>
+	<div class="rank">
+		<div class="rank-box">
+			<div class="num1">
+				<div><img src="../statics/img/icon_jin.png" alt="" /></div>
+				<div class="font" id="rank1"></div>
+			</div>
+			<div class="num2">
+				<div><img src="../statics/img/icon_yin.png" alt="" /></div>
+				<div class="font" id="rank2"></div>
+			</div>
+			<div class="num3">
+				<div><img src="../statics/img/icon_tong.png" alt="" /></div>
+				<div class="font" id="rank3"></div>
+			</div>
+		</div>
+		<div class="rank-my">
+			<div class="rank-mynum lf">
+				<div class="address">
+					<div class="lf info"><span class="sport"></span><span id="fourName"></span></div>
+					<div class="lf paiming" id="rank4"></div>
+				</div>
+			</div>
+			<div class="rt rank-yest">
+				<span>昨日发展</span><span id="lastNum"></span><span>户</span>
+			</div>
+		</div>
+	</div>
+	<div class="card"></div>
+</div>
+</body>
+<script src="../statics/js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var Height = window.screen.height; //设备屏幕高度
+	var bodyHeight = parseInt(Height * 0.40);
+	console.log(bodyHeight);
+	var rem = 220 / 667 * bodyHeight;
+	console.log(rem);
+	$("html").css({ "fontSize": rem })
+	$(".box").css("height", parseInt(bodyHeight) + "px");
+	$(".search").css("height", parseInt(bodyHeight * 0.20) + "px");
+	$(".rank-box").css("height", parseInt(bodyHeight * 0.40) + "px");
+	$(".rank-my").css("height", parseInt(bodyHeight * 0.17) + "px");
+	$(".card").css("height", parseInt(bodyHeight * 0.23) + "px");
+	$(window).resize(function() {
+		var Height = window.screen.height; //设备屏幕高度
+		var bodyHeight = parseInt(Height * 0.40);
+		var rem = 220 / 667 * bodyHeight;
+		$("html").css({ "fontSize": rem })
+	})
+</script>
+<script type="text/javascript">
+	var accessToken = '';
+	$(function () {
+		$.ajax({
+			url:"/index/getAccessToken",
+			data:{},
+			dataType:"json",
+			type:"get",
+			success:function (resultData) {
+				accessToken = resultData.toString();
+                $.ajax({
+                    url:"http://61.168.11.29/WebAppServer/workBench/rank",
+                    data:{accessToken:accessToken},
+                    type:"get",
+                    dataType:"json",
+                    async:false,
+                    success:function (resultData) {
+                        var jsonObj = JSON.parse(resultData);
+                        $("#rank1").text(jsonObj[0].NODE_NAME+'昨日'+jsonObj[0].KPI_VALUE+'户');
+                        $("#rank2").text(jsonObj[1].NODE_NAME+'昨日'+jsonObj[1].KPI_VALUE+'户');
+                        $("#rank3").text(jsonObj[2].NODE_NAME+'昨日'+jsonObj[2].KPI_VALUE+'户');
+                        $("#rank4").text(jsonObj[3].RN);
+                        $("#fourName").text(jsonObj[3].NODE_NAME);
+                        $("#lastNum").text(jsonObj[3].KPI_VALUE);
+                    },
+                    error:function () {
+                        alert('error');
+                    }
+                });
+            },
+			error:function () {
+            }
+		});
+    });
+</script>
+</html>
